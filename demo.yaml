@@ -1,0 +1,42 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: demo
+  labels:
+    app: demo
+spec:
+  externalTrafficPolicy: Cluster
+  ports:
+    - port: 8080
+      protocol: TCP
+      targetPort: 8080
+  selector:
+    app: demo
+  type: NodePort
+---
+apiVersion: extensions/v1beta1 
+kind: Deployment
+metadata:
+  name: demo
+  labels:
+    app: demo
+spec:
+  selector:
+    matchLabels:
+      app: demo
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: demo
+    spec:
+      containers:
+      - image: chatura/demo
+        name: demo
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 8080
+          name: demo
+
+        
